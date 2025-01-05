@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- Sayfa karakter seti UTF-8 olarak ayarlanıyor. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Sayfa, mobil uyumlu olacak şekilde tasarlanıyor. -->
+    <title>TicTacToe Game</title> <!-- Sayfa başlığı. -->
+    <link rel="stylesheet" href="styles.css"> <!-- Harici CSS dosyasına bağlantı. -->
+</head>
+<body>
+    <!-- Giriş Sayfası -->
+    <div class="landing-page active"> <!-- Giriş sayfası görünür olarak başlatılıyor. -->
+        <h1>Welcome to TicTacToe Game </h1> <!-- Hoş geldiniz başlığı. -->
+        <div class="mode-buttons"> <!-- Oyun modları için düğmeler. -->
+            <button onclick="startGame('two-player')">2 Players</button> <!-- İki oyunculu mod düğmesi. -->
+            <button onclick="startGame('computer')">vs Computer</button> <!-- Bilgisayara karşı mod düğmesi. -->
+        </div>
+        <button class="settings-button" onclick="showSettings()">Settings</button> <!-- Ayarlar düğmesi. -->
+    </div>
+    
+    <!-- Yeni Player Name Dialog -->
+    <div class="player-name-dialog" id="playerNameDialog"> <!-- Oyuncu isimlerini almak için diyalog kutusu. -->
+        <div class="dialog-content"> <!-- Diyalog içeriği. -->
+            <h2>Enter Player Names</h2> <!-- Oyuncu isimleri başlığı. -->
+            <input type="text" id="player1Name" placeholder="Player X Name"> <!-- Oyuncu 1 ismi için giriş alanı. -->
+            <input type="text" id="player2Name" placeholder="Player O Name"> <!-- Oyuncu 2 ismi için giriş alanı. -->
+            <div class="dialog-buttons"> <!-- Diyalog düğmeleri. -->
+                <button onclick="submitPlayerNames()">Start Game</button> <!-- Oyunu başlat düğmesi. -->
+                <button onclick="closePlayerDialog()">Cancel</button> <!-- İptal düğmesi. -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Ayarlar Sayfası -->
+    <div class="settings-page"> <!-- Ayarlar sayfası. -->
+        <button class="back-button" onclick="backToMain()">Back</button> <!-- Ana menüye dön düğmesi. -->
+        <h2>Game Settings</h2> <!-- Ayarlar başlığı. -->
+        <div class="settings-panel"> <!-- Ayarlar paneli. -->
+            <select id="language"> <!-- Dil seçici. -->
+                <option value="en">English</option> <!-- İngilizce seçeneği. -->
+                <option value="tr">Türkçe</option> <!-- Türkçe seçeneği. -->
+                <option value="ar">العربية</option> <!-- Arapça seçeneği. -->
+            </select>
+            <select id="theme"> <!-- Tema seçici. -->
+                <option value="light">Light Theme</option> <!-- Açık tema seçeneği. -->
+                <option value="dark">Dark Theme</option> <!-- Koyu tema seçeneği. -->
+            </select>
+            <select id="difficulty"> <!-- Zorluk seçici. -->
+                <option value="easy">Easy</option> <!-- Kolay zorluk seviyesi. -->
+                <option value="medium">Medium</option> <!-- Orta zorluk seviyesi. -->
+                <option value="hard">Hard</option> <!-- Zor zorluk seviyesi. -->
+            </select>
+            <select id="board-size"> <!-- Tahta boyutu seçici. -->
+                <option value="3">3x3</option> <!-- 3x3 boyutu. -->
+                <option value="4">4x4</option> <!-- 4x4 boyutu. -->
+                <option value="5">5x5</option> <!-- 5x5 boyutu. -->
+            </select>
+            <div class="custom-icons"> <!-- Özel simge alanı. -->
+                <input type="text" id="player-x-icon" placeholder="Player X Icon" maxlength="2"> <!-- Oyuncu X için simge giriş alanı. -->
+                <input type="text" id="player-o-icon" placeholder="Player O Icon" maxlength="2"> <!-- Oyuncu O için simge giriş alanı. -->
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Oyun Sayfası -->
+    <div class="game-container hidden"> <!-- Oyun konteyneri başlangıçta gizli. -->
+        <button class="back-button" onclick="backToMain()">Back to Main</button> <!-- Ana menüye dön düğmesi. -->
+        <div class="game-info"> <!-- Oyun bilgileri. -->
+            <div class="scoreboard"> <!-- Skor tablosu. -->
+                <div class="player-x-score">Player X: <span>0</span></div> <!-- Oyuncu X'in skoru. -->
+                <div class="player-o-score">Player O: <span>0</span></div> <!-- Oyuncu O'nun skoru. -->
+            </div>
+            <div class="timer">Time left: <span>30</span>s</div> <!-- Zamanlayıcı. -->
+        </div>
+
+        <div class="game-board"></div> <!-- Oyun tahtası alanı. -->
+
+        <div class="controls"> <!-- Oyun kontrol düğmeleri. -->
+            <button id="undo">Undo Move</button> <!-- Hamleyi geri al düğmesi. -->
+            <button id="reset">New Game</button> <!-- Yeni oyun düğmesi. -->
+        </div>
+
+        
+        <div class="game-message"></div> <!-- Oyun mesaj alanı. -->
+    </div>
+
+    <audio id="move-sound" src="move_sound.mp3"></audio> <!-- Hamle sesi. -->
+    <audio id="win-sound" src="win_sound.mp3"></audio> <!-- Kazanma sesi. -->
+    <audio id="draw-sound" src="draw_sound.mp3"></audio> <!-- Beraberlik sesi. -->
+    <script src="game.js"></script> <!-- JavaScript dosyası bağlantısı. -->
+</body>
+</html>
