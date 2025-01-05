@@ -167,16 +167,27 @@ function backToMain() {
     updateScoreboard(); // Skor tablosu güncelleniyor.
 }
 
-// Oyunu başlatan veya sıfırlayan işlev.
+// Yeni oyun başlatıldığında undo butonunu tekrar göster ve timer'ı başlat
 function initGame() {
-    const size = state.boardSize; // Tahtanın boyutu alınıyor.
-    state.board = Array(size).fill().map(() => Array(size).fill(null)); // Tahta boş bir dizi ile dolduruluyor.
-    state.currentPlayer = 'X'; // İlk oyuncu \"X\" olarak ayarlanıyor.
-    state.winner = null; // Kazanan bilgisi sıfırlanıyor.
-    state.winningLine = null; // Kazanan çizgi bilgisi sıfırlanıyor.
-    state.gameHistory = []; // Hamle geçmişi sıfırlanıyor.
-    updateBoard(); // Tahta güncelleniyor.
-    startTimer(); // Zamanlayıcı başlatılıyor.
+    // Tahtayı temizle ve sıfırla
+    const size = state.boardSize; // Tahta boyutunu al.
+    state.board = Array(size).fill().map(() => Array(size).fill(null)); // Tahtayı boş bir dizi ile sıfırla.
+    state.currentPlayer = 'X'; // İlk oyuncu olarak \"X\" ayarla.
+    state.winner = null; // Kazananı sıfırla.
+    state.winningLine = null; // Kazanan çizgiyi sıfırla.
+    state.gameHistory = []; // Hamle geçmişini sıfırla.
+
+    // Undo butonunu tekrar göster
+    const undoButton = document.getElementById('undo'); // Undo butonunu seç.
+    if (undoButton) { // Eğer buton varsa...
+        undoButton.style.display = 'block'; // Butonu tekrar görünür yap.
+    }
+
+    // Tahtayı güncelle
+    updateBoard(); // Görsel olarak tahtayı sıfırla.
+
+    // Timer'ı başlat
+    startTimer(); // Yeni oyun için zamanlayıcıyı başlat.
 }
 
 // Oyun tahtasını güncelleyen işlev.
@@ -213,28 +224,43 @@ function handleMove(row, col) {
     }
 }
 
-// Oyuncunun veya bilgisayarın hamlesini yapan işlev.
+// makeMove fonksiyonunda oyun bittiğinde endGame'i çağıralım
 function makeMove(row, col) {
-    playSound('move-sound'); // Hamle sesi çalınıyor.
-    state.gameHistory.push(state.board.map(row => [...row])); // Şu anki tahtanın durumu geçmişe kaydediliyor.
-    state.board[row][col] = state.currentPlayer; // Hücre, şu anki oyuncunun simgesiyle dolduruluyor.
+    // Tahtanın mevcut durumunu geçmişe ekle
+    state.gameHistory.push(state.board.map(row => [...row])); // Hamle öncesindeki tahtayı geçmişe kaydediyor.
     
-    const result = checkWinner(); // Oyunun sonucu kontrol ediliyor.
+    // Hücreyi güncelle
+    state.board[row][col] = state.currentPlayer; // Hücreye mevcut oyuncunun simgesini ekliyor.
+    
+    // Hareket sesi çal
+    playSound('move-sound'); // Hamle yapıldığında bir ses efekti çalınıyor.
+    
+    // Kazananı kontrol et
+    const result = checkWinner(); // Kazanan veya berabere durumu kontrol ediliyor.
     if (result.winner) { // Eğer bir kazanan varsa...
-        state.winner = result.winner; // Kazanan belirleniyor.
-        state.winningLine = result.line; // Kazanan çizgi belirleniyor.
+        state.winner = result.winner; // Kazanan oyuncu bilgisi kaydediliyor.
+        state.winningLine = result.line; // Kazanan çizginin koordinatları kaydediliyor.
         state.scores[result.winner]++; // Kazananın skoru artırılıyor.
         playSound('win-sound'); // Kazanma sesi çalınıyor.
         updateScoreboard(); // Skor tablosu güncelleniyor.
-    } else if (isBoardFull()) { // Eğer tahta doluysa...
-        state.winner = 'draw'; // Oyun berabere bitiyor.
+        endGame(); // Oyun sona erdiği için endGame çağrılıyor.
+    } else if (isBoardFull()) { // Eğer tahta doluysa (berabere durumu)...
+        state.winner = 'draw'; // Berabere durumu kaydediliyor.
         playSound('draw-sound'); // Beraberlik sesi çalınıyor.
+        endGame(); // Oyun sona erdiği için endGame çağrılıyor.
     }
 
+    // Oyuncu sırasını değiştir
     state.currentPlayer = state.currentPlayer === 'X' ? 'O' : 'X'; // Sıradaki oyuncuya geçiliyor.
-    updateBoard(); // Tahta güncelleniyor.
-    updateMessage(); // Oyun mesajı güncelleniyor.
-    resetTimer(); // Zamanlayıcı sıfırlanıyor.
+
+    // Tahtayı güncelle
+    updateBoard(); // Görsel olarak tahta güncelleniyor.
+
+    // Mesajı güncelle
+    updateMessage(); // Ekrandaki oyun mesajı güncelleniyor.
+
+    // Zamanlayıcıyı sıfırla
+    resetTimer(); // Yeni tur için zamanlayıcı sıfırlanıyor.
 }
 
 // Bilgisayarın hamlesini yapan işlev.
@@ -467,6 +493,18 @@ function undoMove() {
         updateBoard(); // Tahta güncelleniyor.
         updateMessage(); // Mesaj güncelleniyor.
         resetTimer(); // Zamanlayıcı sıfırlanıyor.
+    }
+}
+
+// Oyun bittiğinde çağrılacak fonksiyon
+function endGame() {
+    // Timer'ı durdur
+    clearInterval(state.timer); // Zamanlayıcıyı durduruyor.
+
+    // Undo butonunu kaldır
+    const undoButton = document.getElementById('undo'); // Undo butonunu seçiyor.
+    if (undoButton) { // Eğer buton varsa...
+        undoButton.style.display = 'none'; // Butonu gizle.
     }
 }
 
