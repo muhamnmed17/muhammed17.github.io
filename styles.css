@@ -1,0 +1,269 @@
+:root {
+    --primary-color: #2c3e50; /* Ana renk. */
+    --secondary-color: #3498db; /* İkincil renk. */
+    --background-color: #ecf0f1; /* Arka plan rengi. */
+    --cell-size: 100px; /* Hücre boyutu. */
+    --border-color: #34495e; /* Hücre kenarlık rengi. */
+    --winning-line-color: #27ae60; /* Kazanan çizgi rengi. */
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+    --primary-color: #141414; /* Koyu tema ana renk. */
+    --secondary-color: #3498db; /* Koyu tema ikincil renk. */
+    --background-color: #293949; /* Koyu tema arka plan rengi. */
+    --border-color: #bdc3c7; /* Koyu tema kenarlık rengi. */
+}
+
+body {
+    margin: 0; /* Sayfa kenar boşluklarını kaldır. */
+    font-family: Arial, sans-serif; /* Yazı tipi. */
+    background-color: var(--background-color); /* Arka plan rengini uygula. */
+    color: var(--primary-color); /* Metin rengini uygula. */
+    min-height: 100vh; /* Minimum yüksekliği ekran yüksekliğine ayarla. */
+    display: flex; /* Esnek kutu düzeni. */
+    justify-content: center; /* İçeriği yatayda ortala. */
+    align-items: center; /* İçeriği dikeyde ortala. */
+    transition: all 0.3s ease; /* Geçiş efektleri. */
+}
+
+.landing-page, .settings-page {
+    display: none; /* Varsayılan olarak gizle. */
+    text-align: center; /* Metinleri ortala. */
+    padding: 2rem; /* İç boşluklar. */
+    background: white; /* Arka plan rengi. */
+    border-radius: 10px; /* Yuvarlak kenarlar. */
+    box-shadow: 0 0 20px rgba(0,0,0,0.1); /* Gölge. */
+    max-width: 500px; /* Maksimum genişlik. */
+    width: 90%; /* Genişliği %90 yap. */
+}
+
+.landing-page.active, .settings-page.active {
+    display: block; /* Aktif olduğunda görünür yap. */
+}
+
+.mode-buttons {
+    display: flex; /* Esnek düzen. */
+    gap: 1rem; /* Düğmeler arasında boşluk. */
+    justify-content: center; /* Ortala. */
+    margin: 2rem 0; /* Dış boşluk. */
+}
+
+.mode-buttons button, .settings-button {
+    padding: 1rem 2rem; /* İç boşluklar. */
+    font-size: 1.1rem; /* Yazı boyutu. */
+    border: none; /* Kenarlıkları kaldır. */
+    border-radius: 5px; /* Yuvarlak kenarlar. */
+    background-color: var(--secondary-color); /* Arka plan rengini uygula. */
+    color: white; /* Yazı rengini beyaz yap. */
+    cursor: pointer; /* İmleci değiştir. */
+    transition: all 0.3s; /* Geçiş efektleri. */
+}
+
+.settings-button {
+    background-color: #27ae60; /* Ayarlar düğmesi için özel renk. */
+}
+
+.back-button {
+    position: absolute; /* Konumlandırmayı sabitle. */
+    top: 1rem; /* Üstten boşluk. */
+    left: 1rem; /* Soldan boşluk. */
+    padding: 0.5rem 1rem; /* İç boşluklar. */
+    background-color: var(--secondary-color); /* Arka plan rengini uygula. */
+    color: white; /* Yazı rengini beyaz yap. */
+    border: none; /* Kenarlıkları kaldır. */
+    border-radius: 5px; /* Yuvarlak kenarlar. */
+    cursor: pointer; /* İmleci değiştir. */
+}
+
+.game-container {
+    max-width: 800px; /* Maksimum genişlik. */
+    margin: 2rem auto; /* Dış boşluk. */
+    padding: 1rem; /* İç boşluklar. */
+    text-align: center; /* Metinleri ortala. */
+}
+
+.game-container.hidden {
+    display: none; /* Gizle. */
+}
+
+.settings-panel {
+    display: grid; /* Izgara düzeni. */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Kolon düzeni. */
+    gap: 1rem; /* Hücreler arası boşluk. */
+    margin-bottom: 2rem; /* Alt boşluk. */
+}
+
+.settings-panel select,
+.settings-panel button,
+.settings-panel input {
+    padding: 0.5rem; /* İç boşluk. */
+    border: 2px solid var(--border-color); /* Kenarlık. */
+    border-radius: 4px; /* Yuvarlak kenarlar. */
+    background: transparent; /* Şeffaf arka plan. */
+    color: var(--primary-color); /* Yazı rengini uygula. */
+}
+
+.game-board {
+    display: grid; /* Izgara düzeni. */
+    grid-template-columns: repeat(3, var(--cell-size)); /* 3x3 düzeni. */
+    gap: 5px; /* Hücreler arası boşluk. */
+    margin: 2rem auto; /* Dış boşluk. */
+    width: fit-content; /* İçeriğe uygun genişlik. */
+}
+
+.cell {
+    width: var(--cell-size); /* Hücre genişliği. */
+    height: var(--cell-size); /* Hücre yüksekliği. */
+    border: 2px solid var(--border-color); /* Kenarlık. */
+    display: flex; /* Esnek düzen. */
+    align-items: center; /* Dikey ortalama. */
+    justify-content: center; /* Yatay ortalama. */
+    font-size: calc(var(--cell-size) * 0.6); /* Yazı boyutu. */
+    cursor: pointer; /* İmleci değiştir. */
+    transition: all 0.3s ease; /* Geçiş efektleri. */
+}
+
+.cell:hover {
+    background-color: rgba(52, 152, 219, 0.1); /* Hücre üzerine gelindiğinde arka plan değişimi. */
+}
+
+.cell.winning {
+    background-color: var(--winning-line-color); /* Kazanan çizgi arka plan rengi. */
+    color: white; /* Yazı rengini beyaz yap. */
+    animation: pulse 1s infinite; /* Sürekli animasyon. */
+}
+
+.controls {
+    display: flex; /* Esnek düzen. */
+    gap: 1rem; /* Düğmeler arası boşluk. */
+    justify-content: center; /* Ortala. */
+    margin-top: 2rem; /* Üst boşluk. */
+}
+
+.controls button {
+    padding: 0.5rem 1rem; /* İç boşluklar. */
+    border: none; /* Kenarlıkları kaldır. */
+    border-radius: 4px; /* Yuvarlak kenarlar. */
+    background-color: var(--secondary-color); /* Arka plan rengini uygula. */
+    color: white; /* Yazı rengini beyaz yap. */
+    cursor: pointer; /* İmleci değiştir. */
+    transition: all 0.3s ease; /* Geçiş efektleri. */
+}
+
+.controls button:hover {
+    opacity: 0.9; /* Opaklık değişimi. */
+    transform: scale(1.05); /* Hafif büyüme. */
+}
+
+.game-message {
+    margin-top: 2rem; /* Üst boşluk. */
+    font-size: 1.5rem; /* Yazı boyutu. */
+    font-weight: bold; /* Kalın yazı. */
+    min-height: 2rem; /* Minimum yükseklik. */
+}
+
+.tutorial-message {
+    margin-top: 1rem; /* Üst boşluk. */
+    font-style: italic; /* Yazı stili italik. */
+    color: var(--secondary-color); /* Yazı rengi. */
+}
+
+.timer {
+    font-size: 1.2rem; /* Yazı boyutu. */
+    margin: 1rem 0; /* Dış boşluk. */
+}
+
+.scoreboard {
+    display: flex; /* Esnek düzen. */
+    justify-content: center; /* Ortala. */
+    gap: 2rem; /* Skorlar arası boşluk. */
+    font-size: 1.2rem; /* Yazı boyutu. */
+    margin: 1rem 0; /* Dış boşluk. */
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); } /* Başlangıç. */
+    50% { transform: scale(1.05); } /* Orta nokta. */
+    100% { transform: scale(1); } /* Bitiş. */
+}
+
+/* X ve O animasyonları */
+@keyframes draw-x {
+    from { transform: scale(0) rotate(-180deg); } /* Başlangıç animasyonu. */
+    to { transform: scale(1) rotate(0); } /* Bitiş animasyonu. */
+}
+
+@keyframes draw-o {
+    from { transform: scale(0); } /* Başlangıç animasyonu. */
+    to { transform: scale(1); } /* Bitiş animasyonu. */
+}
+
+.cell.x {
+    animation: draw-x 0.3s ease-out forwards; /* X için animasyon. */
+}
+
+.cell.o {
+    animation: draw-o 0.3s ease-out forwards; /* O için animasyon. */
+}
+
+/* Dialog Stilleri */
+.player-name-dialog {
+    display: none; /* Varsayılan olarak gizle. */
+    position: fixed; /* Sabit konumlandırma. */
+    top: 0; /* Üstten sıfır. */
+    left: 0; /* Soldan sıfır. */
+    width: 100%; /* Tam genişlik. */
+    height: 100%; /* Tam yükseklik. */
+    background-color: rgba(0, 0, 0, 0.5); /* Yarı şeffaf arka plan. */
+    z-index: 1000; /* Üstte görünmesini sağla. */
+}
+
+.player-name-dialog.active {
+    display: flex; /* Esnek düzen. */
+    justify-content: center; /* Yatay ortala. */
+    align-items: center; /* Dikey ortala. */
+}
+
+.dialog-content {
+    background-color: white; /* Beyaz arka plan. */
+    padding: 2rem; /* İç boşluklar. */
+    border-radius: 10px; /* Yuvarlak kenarlar. */
+    box-shadow: 0 0 20px rgba(0,0,0,0.2); /* Gölge. */
+    min-width: 300px; /* Minimum genişlik. */
+}
+
+.dialog-content h2 {
+    margin-top: 0; /* Üst boşluk kaldır. */
+    margin-bottom: 1.5rem; /* Alt boşluk. */
+    color: var(--primary-color); /* Başlık rengi. */
+}
+
+.dialog-content input {
+    display: block; /* Blok düzeni. */
+    width: 100%; /* Tam genişlik. */
+    padding: 0.5rem; /* İç boşluk. */
+    margin-bottom: 1rem; /* Alt boşluk. */
+    border: 2px solid var(--border-color); /* Kenarlık. */
+    border-radius: 4px; /* Yuvarlak kenarlar. */
+}
+
+.dialog-buttons {
+    display: flex; /* Esnek düzen. */
+    gap: 1rem; /* Düğmeler arası boşluk. */
+    justify-content: flex-end; /* Sağa yasla. */
+    margin-top: 1.5rem; /* Üst boşluk. */
+}
+
+.dialog-buttons button {
+    padding: 0.5rem 1rem; /* İç boşluklar. */
+    border: none; /* Kenarlıkları kaldır. */
+    border-radius: 4px; /* Yuvarlak kenarlar. */
+    background-color: var(--secondary-color); /* Arka plan rengini uygula. */
+    color: white; /* Yazı rengini beyaz yap. */
+    cursor: pointer; /* İmleci değiştir. */
+}
+
+.dialog-buttons button:last-child {
+    background-color: #95a5a6; /* İptal düğmesi için özel renk. */
+}
